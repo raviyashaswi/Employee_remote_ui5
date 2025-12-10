@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="CatService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotation Term="Core.Links">
+                <Collection>
+                    <Record>
+                        <PropertyValue Property="rel" String="author"/>
+                        <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+                    </Record>
+                </Collection>
+            </Annotation>
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Remote" EntityType="CatService.Remote">
+                    <NavigationPropertyBinding Path="employee" Target="Employees"/>
+                </EntitySet>
+                <EntitySet Name="Holiday" EntityType="CatService.Holiday"/>
+                <EntitySet Name="Employees" EntityType="CatService.Employees">
+                    <NavigationPropertyBinding Path="role" Target="Roles"/>
+                    <NavigationPropertyBinding Path="remote" Target="Remote"/>
+                    <NavigationPropertyBinding Path="allocation" Target="Allocation"/>
+                </EntitySet>
+                <EntitySet Name="Roles" EntityType="CatService.Roles">
+                    <NavigationPropertyBinding Path="employees" Target="Employees"/>
+                </EntitySet>
+                <EntitySet Name="Allocation" EntityType="CatService.Allocation">
+                    <NavigationPropertyBinding Path="employee" Target="Employees"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="Remote">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <NavigationProperty Name="employee" Type="CatService.Employees" Partner="remote">
+                    <ReferentialConstraint Property="employee_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="employee_ID" Type="Edm.Int32"/>
+                <Property Name="remote" Type="Edm.Int32" DefaultValue="1"/>
+                <Property Name="destination" Type="Edm.Int32" DefaultValue="1"/>
+                <Property Name="fromDate" Type="Edm.Date"/>
+                <Property Name="toDate" Type="Edm.Date"/>
+                <Property Name="days" Type="Edm.Int32"/>
+                <Property Name="hours" Type="Edm.Int32"/>
+                <Property Name="remarks" Type="Edm.String"/>
+                <Property Name="status" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="Holiday">
+                <Key>
+                    <PropertyRef Name="date"/>
+                </Key>
+                <Property Name="date" Type="Edm.Date" Nullable="false"/>
+                <Property Name="day" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Employees">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="name" Type="Edm.String"/>
+                <NavigationProperty Name="role" Type="CatService.Roles" Partner="employees">
+                    <ReferentialConstraint Property="role_rID" ReferencedProperty="rID"/>
+                </NavigationProperty>
+                <Property Name="role_rID" Type="Edm.Int32"/>
+                <NavigationProperty Name="remote" Type="Collection(CatService.Remote)" Partner="employee">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="allocation" Type="CatService.Allocation" Partner="employee">
+                    <OnDelete Action="Cascade"/>
+                    <ReferentialConstraint Property="ID" ReferencedProperty="employee_ID"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="Roles">
+                <Key>
+                    <PropertyRef Name="rID"/>
+                </Key>
+                <Property Name="rID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="rName" Type="Edm.String"/>
+                <Property Name="tDays" Type="Edm.Int32"/>
+                <Property Name="tHours" Type="Edm.Int32"/>
+                <NavigationProperty Name="employees" Type="Collection(CatService.Employees)" Partner="role"/>
+            </EntityType>
+            <EntityType Name="Allocation">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <NavigationProperty Name="employee" Type="CatService.Employees" Partner="allocation">
+                    <ReferentialConstraint Property="employee_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="employee_ID" Type="Edm.Int32"/>
+                <Property Name="uDays" Type="Edm.Int32"/>
+                <Property Name="uHours" Type="Edm.Int32"/>
+                <Property Name="rDays" Type="Edm.Int32"/>
+                <Property Name="rHours" Type="Edm.Int32"/>
+            </EntityType>
+            <Annotations Target="CatService.Remote/ID">
+                <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatService.Remote/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations Target="CatService.Remote/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations Target="CatService.Remote/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations Target="CatService.Remote/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
+            <Annotations Target="CatService.Remote/remote">
+                <Annotation Term="Validation.AllowedValues">
+                    <Collection>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="No"/>
+                            <PropertyValue Property="Value" Int="0"/>
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="Yes"/>
+                            <PropertyValue Property="Value" Int="1"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="CatService.Remote/destination">
+                <Annotation Term="Validation.AllowedValues">
+                    <Collection>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="inCountry"/>
+                            <PropertyValue Property="Value" Int="1"/>
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="forgienCountry"/>
+                            <PropertyValue Property="Value" Int="2"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="CatService.Remote/status">
+                <Annotation Term="Validation.AllowedValues">
+                    <Collection>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="canceled"/>
+                            <PropertyValue Property="Value" Int="-1"/>
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="pending"/>
+                            <PropertyValue Property="Value" Int="0"/>
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="approved"/>
+                            <PropertyValue Property="Value" Int="1"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="CatService.Employees/name">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="CatService.Allocation/ID">
+                <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

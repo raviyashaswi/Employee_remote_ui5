@@ -1,0 +1,24 @@
+<mvc:View controllerName="project2.controller.PH"
+   xmlns:mvc="sap.ui.core.mvc"
+   xmlns="sap.m">
+   <Page id="_IDGenPage3" >
+   
+      <HBox id="_IDGenHBox" class="sapUiResponsiveMargin" justifyContent="SpaceBetween" alignItems="Center">
+         <HBox id="_IDGenHBox1">
+            <DatePicker valueFormat="yyyy-MM-dd" id="DP1" placeholder="Enter Date" change=".onSearch"/>
+            <Button id="_IDGenButton" icon="sap-icon://sort" press=".onPress"/>
+         </HBox>
+         <SearchField id="_IDGenSearchField" placeholder="Search here" search=".onSearch"/>
+      </HBox>
+      <List id="_IDGenList1" headerText="Holiday List" class="sapUiResponsiveMargin" width="auto" items="{/Holiday}">
+         <items>
+            <ObjectListItem id="_IDGenObjectListItem" title="{date}">
+               <firstStatus>
+                  <ObjectStatus id="_IDGenObjectStatus" text="{day}" />
+               </firstStatus>
+            </ObjectListItem>
+
+         </items>
+      </List>
+   </Page>
+</mvc:View>

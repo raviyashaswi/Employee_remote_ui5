@@ -1,0 +1,110 @@
+<mvc:View controllerName="project2.controller.Request"
+   xmlns:mvc="sap.ui.core.mvc"
+   xmlns:lf="sap.ui.layout.form"
+   xmlns:u="sap.ui.unified"
+   xmlns:m="sap.m">
+
+   <m:Page id="page1">
+
+      <m:headerContent>
+         <m:Bar id="_IDGenBar">
+            <m:contentLeft>
+               <m:Button id="_IDGenButton2" icon="sap-icon://nav-back" press=".onHeaderButtonPress"/>
+               <m:ObjectStatus id="_IDGenObjectStatus2" text="{ path: 'requestJSON>/status', formatter: '.formatter.statusText' }" state="{ path: 'requestJSON>/status', formatter: '.formatter.statusColor' }"/>
+            </m:contentLeft>
+
+            <m:contentRight>
+               <m:Label id="_IDGenLabel" text="{requestJSON>/ID}"/>
+               <m:Button id="_IDGenButton3" icon="sap-icon://edit" press=".onEditButtonPress" visible="{= ${requestJSON>/status} === 0}"/>
+               <m:Button id="_IDGenButton1" icon="sap-icon://delete" press=".onDeleteButtonPress" visible="{= ${requestJSON>/status} === 0}"/>
+
+            </m:contentRight>
+         </m:Bar>
+      </m:headerContent>
+
+
+      <m:HBox id="_IDGenHBox3" width="100%" height="100%" justifyContent="SpaceBetween" class="sapUiContentPadding">
+         <m:VBox id="_IDGenVBox" width="100%" height="100%" class="sapUiContentPadding">
+            <u:Calendar id="calendar" width="100%" intervalSelection="true" select="handleCalendarSelect" weekNumberSelect="handleWeekNumberSelect" legend="calendarLegend" specialDates ="{requestJSON>/specialDates}" disabledDates="{requestJSON>/specialDates}">
+               <u:specialDates>
+                  <u:DateTypeRange id="_IDGenDateTypeRange" startDate="{requestJSON>startDate}" endDate="{requestJSON>endDate}" type="{requestJSON>type}" tooltip="{requestJSON>tooltip}" />
+               </u:specialDates>
+               <u:disabledDates>
+                  <u:DateTypeRange id="_IDGenDateTypeRange1" startDate="{requestJSON>startDate}" endDate="{requestJSON>endDate}" type="{requestJSON>type}" tooltip="{requestJSON>tooltip}" />
+                  <!-- <u:DateTypeRange id="_IDGenDateTypeRan" startDate="2025-11-01T00:00:00" endDate="2025-11-10T23:59:59" type="{requestJSON>type}" tooltip="{requestJSON>tooltip}" /> -->
+               </u:disabledDates>
+            </u:Calendar>
+            <u:CalendarLegend id="calendarLegend">
+               <u:items>
+                  <u:CalendarLegendItem id="_IDGenCalendarLegendItem2" text="Holiday" type="Type15" />
+                  <u:CalendarLegendItem id="_IDGenCalendarLegendItem1" text="Pending" type="Type06" />
+                  <u:CalendarLegendItem id="_IDGenCalendarLegendItem4" text="Approved" type="Type08" />
+                  <u:CalendarLegendItem id="_IDGenCalendarLegendItem5" text="Rejected" type="Type02" />
+
+               </u:items>
+            </u:CalendarLegend>
+         </m:VBox>
+         <m:VBox id="_IDGenVBox1" width="100%" height="100%" justifyContent="SpaceBetween" class="sapUiContentPadding">
+            <m:ScrollContainer id="_IDGenScrollContainer" vertical="true" height = "100%">
+               <lf:SimpleForm id="RemoteForm" editable="false" layout="ResponsiveGridLayout" columnsL="2" columnsM="2" labelSpanL="3" labelSpanM="3">
+                  <m:Label id="_IDGenLabel10" text="Summary" visible="{= ${editJSON>/editOn} === false}"></m:Label>
+                  <m:FormattedText id="_IDGenFormattedText" visible="{= ${editJSON>/editOn} === false}" htmlText="{= 
+                     'Requesting &lt;strong&gt;' + (${requestJSON>/destination} === 1 ? 'In-Country' : 'Out-Country') + ' Remote Work&lt;/strong&gt; ' +
+                     'for a total of &lt;strong&gt;' + (${requestJSON>/hours} * ${requestJSON>/days}) + ' hour/s&lt;/strong&gt; ' +
+                     '(' + ${requestJSON>/hours} + ' hrs/day for ' + ${requestJSON>/days} + ' day/s) ' +
+                     'from ' + ${requestJSON>/fromDate} + ' to ' + ${requestJSON>/toDate} 
+                  }" />
+                  <m:Label id="_IDGenLabel7" text="Remote Mode"/>
+                  <m:RadioButtonGroup id="_IDGenRadioButtonGroup" columns="2" editable="{editJSON>/editOn}" select=".onRadioButton">
+                     <m:RadioButton id="_IDGenRadioButton" text="InCountry" selected="{= ${requestJSON>/destination} === 1}"/>
+                     <m:RadioButton id="_IDGenRadioButton1" text="OutCountry" selected="{= ${requestJSON>/destination} === 2}"/>
+                  </m:RadioButtonGroup>
+
+                  <m:Label id="_IDGenLabel4" text="Hours" visible="{= ${requestJSON>/destination} === 1}"/>
+                  <m:Text id="_IDGenText18" text="{requestJSON>/hours}/Day" visible="{= ${editJSON>/editOn} === false &amp;&amp; ${requestJSON>/destination} === 1}"/>
+                  <!-- <m:Input id="_IDGenInput1" visible="{= ${editJSON>/editOn} === true &amp;&amp; ${requestJSON>/destination} === 1}"/> -->
+                  <!-- visible="{= ${editJSON>/editOn} === true &amp;&amp; ${requestJSON>/destination} === 1}" -->
+
+                  <m:StepInput id="_IDGenInput1" min="1" max="8" step="1" textAlign="Center" description="/ Day" visible="{= ${editJSON>/editOn} === true &amp;&amp; ${requestJSON>/destination} === 1}"/>
+
+                  <m:Label id="_IDGenLabel1" text="From Date"/>
+                  <m:Text id="_IDGenText1" text="{requestJSON>/fromDate}"/>
+
+                  <m:Label id="_IDGenLabel2" text="To Date"/>
+                  <m:Text id="_IDGenText3" text="{requestJSON>/toDate}"/>
+
+                  <m:Label id="_IDGenLabel3" text="Days" visible="{= ${editJSON>/editOn} === false}"/>
+                  <m:Text id="_IDGenText9" text="{requestJSON>/days}" visible="{= ${editJSON>/editOn} === false}"/>
+
+                  <m:Label id="_IDGenLabel5" text="Remarks"/>
+                  <m:Text id="_IDGenText19" text="{= (${remarks} || 'null') }" visible="{= ${editJSON>/editOn} === false}"/>
+                  <m:Input id="_IDGenInput" value="{requestJSON>/remarks}" visible="{= ${editJSON>/editOn} === true}" />
+
+                  <!-- <m:Label text="{= ${editJSON>/editOn} === false &amp;&amp; !${requestJSON>/remoteDoc_name}==null}"></m:Label> -->
+
+                  <m:Label id="_IDGenLabel13" text="Files"/>
+                  <m:VBox id="_IDGenHBox2" visible="{= ${requestJSON>/remoteDoc_name} !== null}">
+                  <m:Link id="_IDGenLink" text="{requestJSON>/remoteDoc_name}" href="{requestJSON>/remoteDoc_link}" />
+                  <m:Button id="_IDGenButton7" icon="sap-icon://delete" visible="{=  ${editJSON>/editOn} === true &amp;&amp; ${editJSON>/editNew} !== true}" type="Reject" press=".fileDeletePress"/>
+                  </m:VBox>
+                  <u:FileUploader id="fileUploader" visible="{= ${editJSON>/editNew} === true || (${editJSON>/editOn} === true &amp;&amp;  ${requestJSON>/remoteDoc_name} === null)}" name="myFileUpload" tooltip="Upload your file" change="onFileSelected"/>
+                  <m:Label id="_IDGenLabel6" text="Status" visible="{= ${editJSON>/editOn} === false}"/>
+                  <m:ObjectStatus id="_IDGenObjectStatus3" text="{ path: 'requestJSON>/status', formatter: '.formatter.statusText' }" state="{ path: 'requestJSON>/status', formatter: '.formatter.statusColor' }" visible="{= ${editJSON>/editOn} === false}"/>
+
+               </lf:SimpleForm>
+            </m:ScrollContainer>
+         </m:VBox>
+      </m:HBox>
+
+
+      <m:footer>
+         <m:OverflowToolbar id="_IDGenOverflowToolbar1" visible="{editJSON>/editOn}">
+            <m:ToolbarSpacer id="_IDGenToolbarSpacer1"/>
+            <m:Button id="_IDGenButton4" type="Accept" text="Save" press=".Save"/>
+            <m:Button id="_IDGenButton5" type="Reject" text="Cancel" press=".Cancel"/>
+         </m:OverflowToolbar>
+      </m:footer>
+
+   </m:Page>
+
+</mvc:View>

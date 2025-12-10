@@ -1,0 +1,21 @@
+<mvc:View controllerName="project2.controller.RR"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f">
+    <Page id="_IDGenPage" title="ID: {userJSON>/0/ID}">
+		<headerContent>
+			<Label id="_IDGenLabel8" text="{userJSON>/0/name}"></Label>	
+			<Label id="_IDGenLabel11" text="{userJSON>/0/role/rName}"></Label>	
+
+		</headerContent>
+		
+        <f:FlexibleColumnLayout id="flexibleColumnLayout" backgroundDesign="Solid">
+		<f:beginColumnPages>
+			<mvc:XMLView id="beginView" viewName="project2.view.Dash"/>
+		</f:beginColumnPages>
+		<f:midColumnPages>
+			<mvc:XMLView id="requestView" viewName="project2.view.Request"/>
+		</f:midColumnPages>
+	</f:FlexibleColumnLayout>
+    </Page>
+</mvc:View>
