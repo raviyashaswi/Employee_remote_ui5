@@ -5,7 +5,7 @@ sap.ui.define([
     'sap/ui/core/format/DateFormat',
     'sap/ui/core/BusyIndicator'
 
-], (Controller, formatter, fioriLibrary, DateFormat,BusyIndicator) => {
+], (Controller, formatter, fioriLibrary, DateFormat, BusyIndicator) => {
     "use strict";
 
     return Controller.extend("project2.controller.Request", {
@@ -79,7 +79,7 @@ sap.ui.define([
             var eModel = this.getOwnerComponent().getModel("editJSON");
             var oModel = this.getView().getModel();
             var rModel = this.getOwnerComponent().getModel("requestJSON");
-            var r = rModel.getData()   ;
+            var r = rModel.getData();
             var dPath = `/Remote(${r.ID})`;
             var oContextBinding = oModel.bindContext(dPath);
             try {
@@ -113,9 +113,9 @@ sap.ui.define([
             var oDetail = oContext.getBoundContext().getObject();
             console.log(oDetail)
             sap.m.MessageToast.show(oDetail.state);
-            rModel.setProperty("/remoteDoc_name",null);
-            rModel.setProperty("/remoteDoc_link",null);
-            rModel.setProperty("/remoteDoc_ID",null);
+            rModel.setProperty("/remoteDoc_name", null);
+            rModel.setProperty("/remoteDoc_link", null);
+            rModel.setProperty("/remoteDoc_ID", null);
         },
         onFileSelected(oEvent) {
 
@@ -138,10 +138,7 @@ sap.ui.define([
             console.log("Save Pressed")
             BusyIndicator.show();
             var eModel = this.getOwnerComponent().getModel("editJSON");
-            eModel.setProperty("/editOn", false);
-            if (eModel.getProperty("/editNew") === true){
-                eModel.setProperty("/editNew",false);
-            }
+
             console.log(eModel.getData());
             var l = this.byId("_IDGenLabel");
             var tf = this.byId("_IDGenText1");
@@ -186,6 +183,10 @@ sap.ui.define([
                 var oFCL = this.oView.getParent().getParent();
                 oFCL.setLayout(fioriLibrary.LayoutType.OneColumn);
                 sap.m.MessageToast.show(oDetail.Sstate);
+                eModel.setProperty("/editOn", false);
+                if (eModel.getProperty("/editNew") === true) {
+                    eModel.setProperty("/editNew", false);
+                }
             }
             else {
                 sap.m.MessageToast.show(oDetail.Sstate);
